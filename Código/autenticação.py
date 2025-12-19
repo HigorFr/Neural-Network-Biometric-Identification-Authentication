@@ -186,7 +186,7 @@ for descritor in descritores:
 
 
 
-
+            #Caso for o MLP
             else:
                 h1, h2 = 64, 16  #arquitura, aqui defini 64 pra primeira camada e 16 na outra, porque meu pc não aguenta muito
 
@@ -236,8 +236,8 @@ for descritor in descritores:
 
                         losses.append(total_loss)  #aguarda o loss desse batch
 
-                        #aqui começa o backprop
 
+                        #aqui começa o backprop
                         g3 = probs
                         g3[np.arange(len(yb)), yb] -= 1
                         g3 /= len(yb)
@@ -245,7 +245,7 @@ for descritor in descritores:
                         g2 = (g3 @ W3) * (z2 > 0)
                         g1 = (g2 @ W2) * (z1 > 0)
 
-                        # Atualiza os pesssos e bias com gradiente descente  e o l2
+                        #atualiza os pesssos e bias com gradiente descente  e já joga o l2
                         W3 -= lr * (g3.T @ a2 + l2 * W3)
                         b3 -= lr * g3.sum(axis=0)
                         W2 -= lr * (g2.T @ a1 + l2 * W2)
@@ -306,7 +306,12 @@ for descritor in descritores:
                 pior_fold = (fold_id, acur)
 
 
+        acuracia_media = np.mean(acuracias)
+        print(f"\nAcurácia média final dos folds ({modelo.upper()} - {descritor}): {acuracia_media:.4f}")
+
         #Colocando no arquivo de config os parametros (Em ingles, conforme estava no pptx da atividade)
+
+
         with open(arquivo_config, "w", encoding="utf-8") as f:
             f.write(f"EXECUTION_TIMESTAMP: {timestamp}\n")
             f.write(f"DESCRIPTOR: {descritor}\n")
@@ -321,9 +326,9 @@ for descritor in descritores:
                 f.write(f"LINEAR_OPERATION_BATCH_SIZE: {batch}\n")
                 f.write(f"LINEAR_OPERATION_PATIENCE: {paciencia}\n")
             else:
-                f.write("MLP_SPECIFICATION: ('layer 0', {}, 'relu', 'cross_entropy')\n".format(h1))
-                f.write("MLP_SPECIFICATION: ('layer 1', {}, 'relu', 'cross_entropy')\n".format(h2))
-                f.write("MLP_SPECIFICATION: ('output_layer', {}, 'softmax', 'cross_entropy')\n".format(num_classes))
+                f.write(f"MLP_SPECIFICATION: ('layer 0', {h1}, 'relu', 'cross_entropy')\n")
+                f.write(f"MLP_SPECIFICATION: ('layer 1', {h2}, 'relu', 'cross_entropy')\n")
+                f.write(f"MLP_SPECIFICATION: ('output_layer', {num_classes}, 'softmax', 'cross_entropy')\n")
                 f.write(f"MLP_OPERATION_LR_METHOD: FIX\n")
                 f.write(f"MLP_OPERATION_LR_PARAMS: {lr}\n")
                 f.write(f"MLP_OPERATION_INITIALISATION: He_2015\n")
@@ -333,3 +338,7 @@ for descritor in descritores:
                 f.write(f"MLP_OPERATION_BATCH_SIZE: {batch}\n")
                 f.write(f"MLP_OPERATION_L2: {l2}\n")
 
+            #coloco os resultados de fato
+            f.write(f"\nFINAL_AVERAGE_ACCURACY: {acuracia_media:.4f}\n")
+            f.write(f"BEST_FOLD: {melhor_fold[0]} (ACCURACY: {melhor_fold[1]:.4f})\n")
+            f.write(f"WORST_FOLD: {pior_fold[0]} (ACCURACY: {pior_fold[1]:.4f})\n")

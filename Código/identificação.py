@@ -107,7 +107,7 @@ for descritor in descritores:
                 #hiperparâmetros
                 lr = 0.005
                 l2 = 1e-4
-                epocas = 20
+                epocas = 80
                 batch = 64
                 melhor_val_loss = np.inf
                 paciencia = 5
@@ -184,7 +184,7 @@ for descritor in descritores:
                 #hiperparâmetros
                 lr = 0.001
                 l2 = 1e-5
-                epocas = 20
+                epocas = 80
                 batch = 64
                 dropout_rate = 0.5
                 melhor_val_loss = np.inf

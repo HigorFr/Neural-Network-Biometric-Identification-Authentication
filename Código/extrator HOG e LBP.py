@@ -35,7 +35,7 @@ print(f"total de imagens dessas classes: {len(imgs_filtradas)}")
 
 #Aplicação do HOG
 
-usar_descritor = "HOG"   # HOG ou "LBP"
+usar_descritor = "HOG"   #Se vai gerar HOG ou "LBP"
 
 vetores = []
 rótulos = []
