@@ -2,7 +2,6 @@ import numpy as np
 from sklearn.model_selection import KFold
 import os
 import datetime
-from sklearn.preprocessing import LabelEncoder
 
 
 #funções auxiliares para inicializar pesos
@@ -33,10 +32,9 @@ for descritor in descritores:
     print(f"Número de classes (IDs): {len(ids_unicos)}")
     print(f"Número de amostras: {len(vetores)}")
 
-    #codificar rótulos
-    le = LabelEncoder()  #transforma rótulos em números
-    rotulos_encoded = le.fit_transform(rotulos)
-    num_classes = len(le.classes_)
+    rotulos_encoded = rotulos.astype(int)   #só pra garantir (não conferi se já estava como inteiro)
+    num_classes = int(np.max(rotulos_encoded)) + 1
+
 
     print(f"Classes codificadas: {num_classes}")
 

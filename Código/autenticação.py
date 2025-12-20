@@ -125,7 +125,7 @@ for descritor in descritores:
 
                 #Parametros de fato:
                 lr = 0.005 #taxa de aprendizado
-                l2 = 1e-5 #Penalidade (baixa)
+                l2 = 5e-4 #Penalidade (baixa)
                 epocas = 100 #auto-explicativo
                 batch = 128  #auto-explicativo
                 paciencia = 20 #tempo sem melhorar
@@ -188,7 +188,7 @@ for descritor in descritores:
 
             #Caso for o MLP
             else:
-                h1, h2 = 64, 16  #arquitura, aqui defini 64 pra primeira camada e 16 na outra, porque meu pc não aguenta muito
+                h1, h2 = 32, 8  #arquitura, aqui defini 64 pra primeira camada e 16 na outra, porque meu pc não aguenta muito
 
                 #define os pesos com bases naquelas funções auxiliares
                 W1, b1 = inicializar_pesos_final(n_atrib, h1), np.zeros(h1)
@@ -197,7 +197,7 @@ for descritor in descritores:
 
                #Parametros de fato:
                 lr = 0.005 #taxa de aprendizado
-                l2 = 1e-5 #Penalidade (baixa)
+                l2 = 5e-4 #Penalidade
                 epocas = 100 #auto-explicativo
                 batch = 128  #auto-explicativo
                 paciencia = 20 #tempo sem melhorar
