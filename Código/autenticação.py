@@ -346,8 +346,8 @@ for descritor in descritores:
         with open(arquivo_config, "w", encoding="utf-8") as f:
             f.write(f"EXECUTION_TIMESTAMP: {timestamp}\n")
             f.write(f"DESCRIPTOR: {descritor}\n")
-            f.write(f"MODEL: {modelo}\n\n")
-
+            f.write(f"MODEL: {modelo}\n")
+            f.write(f"GLOBAL_ACURACY: {acuracia_media:.4f} \n\n")
 
             f.write("CONFUSION_MATRIX_MEAN_OVER_FOLDS:\n")
             f.write(f"  TRUE_POSITIVE_MEAN: {np.mean(TPs):.4f}\n")

@@ -105,7 +105,7 @@ for descritor in descritores:
                 #hiperparâmetros
                 lr = 0.005
                 l2 = 1e-4
-                epocas = 80
+                epocas = 60
                 batch = 64
                 melhor_val_loss = np.inf
                 paciencia = 5
@@ -173,21 +173,20 @@ for descritor in descritores:
 
             #MODELO MLP
             else:
-                #arquitetura: input -> hidden1 -> hidden2 -> output
-                h1, h2 = 64, 16
+                h1, h2 = 128, 32
                 W1, b1 = inicializar_weights_he(n_atrib, h1), np.zeros(h1)
                 W2, b2 = inicializar_weights_he(h1, h2), np.zeros(h2)
                 W3, b3 = inicializar_weights_xavier(h2, num_classes), np.zeros(num_classes)
 
                 #hiperparâmetros
                 lr = 0.001
-                l2 = 1e-5
-                epocas = 80
+                l2 = 1e-4
+                epocas = 60
                 batch = 64
-                dropout_rate = 0.5
+                dropout_rate = 0.4
                 melhor_val_loss = np.inf
                 melhor_val_acc = 0
-                paciencia = 5
+                paciencia = 10
                 piora = 0
 
                 for ep in range(epocas):
@@ -322,11 +321,13 @@ for descritor in descritores:
         print(f"Melhor fold: {melhor_fold}")
         print(f"Pior fold: {pior_fold}")
 
+
         #salva configuração final
         with open(arquivo_config, "w", encoding="utf-8") as f:
             f.write(f"EXECUTION_TIMESTAMP: {timestamp}\n")
             f.write(f"DESCRIPTOR: {descritor}\n")
-            f.write(f"MODEL: {modelo}\n\n")
+            f.write(f"MODEL: {modelo}\n")
+            f.write(f"GLOBAL_ACURACY: {np.mean(acuracias):.4f} \n\n")
 
             if modelo == "linear":
                 f.write(f"LINEAR_SPECIFICATION: ('input_layer', {n_atrib}, 'softmax', 'cross_entropy')\n")
