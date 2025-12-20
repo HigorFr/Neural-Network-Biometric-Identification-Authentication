@@ -14,15 +14,20 @@ def inicializar_weights_xavier(inp, out): #Xavier/Glorot initialization
 
 
 #configurações gerais
+usar_pouco = True #Só para testar com menos dados
 timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
 descritores = ["HOG", "LBP"]  #descritores a processar
-modelos = ["linear", "mlp"]    #tipos de modelo
+modelos = ["linear","mlp"]    #tipos de modelo
 random_state = 42               #seed para reproducibilidade
 
 for descritor in descritores:
 
     #carregar dados
-    data = np.load(f"Código/descritores_{descritor}.npz")
+    if(usar_pouco == True):
+        data = np.load(f"Código/mini_descritores_{descritor}.npz")
+    else:
+        data = np.load(f"Código/descritores_{descritor}.npz")
+    
     vetores = data["vetores"]
     rotulos = data["rotulos"]
     ids_unicos = data["ids_unicos"]
@@ -105,7 +110,7 @@ for descritor in descritores:
                 #hiperparâmetros
                 lr = 0.005
                 l2 = 1e-4
-                epocas = 60
+                epocas = 1000
                 batch = 64
                 melhor_val_loss = np.inf
                 paciencia = 5
@@ -180,13 +185,13 @@ for descritor in descritores:
 
                 #hiperparâmetros
                 lr = 0.001
-                l2 = 1e-4
-                epocas = 60
+                l2 = 1e-3
+                epocas = 1000
                 batch = 64
-                dropout_rate = 0.4
+                dropout_rate = 0.1
                 melhor_val_loss = np.inf
                 melhor_val_acc = 0
-                paciencia = 10
+                paciencia = 100
                 piora = 0
 
                 for ep in range(epocas):

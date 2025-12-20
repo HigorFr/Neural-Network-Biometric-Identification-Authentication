@@ -8,6 +8,8 @@ from tqdm import tqdm
 import pandas as pd
 
 
+fazer_pouco = True
+usar_descritor = "LBP"    #Se vai gerar HOG ou "LBP"
 caminho_root = "Código/Dataset/"
 
 
@@ -17,8 +19,13 @@ df = pd.read_csv("Código/Dataset/identity_CelebA.txt", sep=" ", names=["img", "
 #Conta quantas imagens cada ID tem
 contagem = df["id"].value_counts()
 
-#Seleciona o top 20%
-qtd_ids = int(len(contagem) * 0.20)
+#Seleciona o top 20% (ou 5% se eu só queria fazer o pacote para testar)
+if(fazer_pouco == True):
+    qtd_ids = int(len(contagem) * 0.05)
+else:
+    qtd_ids = int(len(contagem) * 0.20)
+
+
 ids_escolhidos = contagem.head(qtd_ids).index
 
 #Filtra o dataframe
@@ -35,7 +42,6 @@ print(f"total de imagens dessas classes: {len(imgs_filtradas)}")
 
 #Aplicação do HOG
 
-usar_descritor = "HOG"   #Se vai gerar HOG ou "LBP"
 
 vetores = []
 rótulos = []
@@ -92,8 +98,10 @@ print(np.isnan(vetores).sum())
 
 
 #Salvar arquivo que a main vai usar
-
-nome_arquivo = f"Código/descritores_{usar_descritor}.npz"
+if(fazer_pouco == True):
+    nome_arquivo = f"Código/mini_descritores_{usar_descritor}.npz"
+else:
+    nome_arquivo = f"Código/descritores_{usar_descritor}.npz"
 
 np.savez(
     nome_arquivo,
