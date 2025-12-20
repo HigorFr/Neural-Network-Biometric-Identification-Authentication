@@ -97,6 +97,9 @@ for descritor in descritores:
 
         #placeholder que vão ser inseridos durante a execução (Só vai servir pra colocar no log)
         acuracias = []
+        TPs, TNs, FPs, FNs = [], [], [], []
+        precisions_1, precisions_0 = [], []
+        recalls_1, recalls_0 = [], []
         melhor_fold = (-1, -np.inf)
         pior_fold = (-1, np.inf)
 
@@ -294,8 +297,36 @@ for descritor in descritores:
             probs_final /= probs_final.sum(axis=1, keepdims=True)
             pred = probs_final.argmax(axis=1)
 
+            #Fazendo o Confusion matrix manual
+            TP = np.sum((pred == 1) & (y_teste == 1))
+            TN = np.sum((pred == 0) & (y_teste == 0))
+            FP = np.sum((pred == 1) & (y_teste == 0))
+            FN = np.sum((pred == 0) & (y_teste == 1))
+
+            #Dividdindo por classe
+            precision_1 = TP / (TP + FP + 1e-8)
+            recall_1    = TP / (TP + FN + 1e-8)
+
+            precision_0 = TN / (TN + FN + 1e-8)
+            recall_0    = TN / (TN + FP + 1e-8)
+
+            balanced_acc = 0.5 * (recall_0 + recall_1)
+
+
             acur = (pred == y_teste).mean()
             acuracias.append(acur)
+
+            TPs.append(TP)
+            TNs.append(TN)
+            FPs.append(FP)
+            FNs.append(FN)
+
+            precisions_1.append(precision_1)
+            recalls_1.append(recall_1)
+
+            precisions_0.append(precision_0)
+            recalls_0.append(recall_0)
+
 
             print(f"Acurácia: {acur:.4f}")
 
@@ -317,6 +348,20 @@ for descritor in descritores:
             f.write(f"DESCRIPTOR: {descritor}\n")
             f.write(f"MODEL: {modelo}\n\n")
 
+
+            f.write("CONFUSION_MATRIX_MEAN_OVER_FOLDS:\n")
+            f.write(f"  TRUE_POSITIVE_MEAN: {np.mean(TPs):.4f}\n")
+            f.write(f"  FALSE_POSITIVE_MEAN: {np.mean(FPs):.4f}\n")
+            f.write(f"  TRUE_NEGATIVE_MEAN: {np.mean(TNs):.4f}\n")
+            f.write(f"  FALSE_NEGATIVE_MEAN: {np.mean(FNs):.4f}\n\n")
+
+            f.write("  CLASS_1 (POSITIVE – SAME_IDENTITY):\n")
+            f.write(f"    PRECISION_MEAN: {np.mean(precisions_1):.4f}\n")
+            f.write(f"    RECALL_MEAN: {np.mean(recalls_1):.4f}\n\n")
+
+            f.write("  CLASS_0 (NEGATIVE – DIFFERENT_IDENTITIES):\n")
+            f.write(f"    PRECISION_MEAN: {np.mean(precisions_0):.4f}\n")
+            f.write(f"    RECALL_MEAN: {np.mean(recalls_0):.4f}\n\n")
         
             if modelo == "linear":
                 f.write("LINEAR_SPECIFICATION: ('input_layer', {}, 'softmax', 'cross_entropy')\n".format(n_atrib))
