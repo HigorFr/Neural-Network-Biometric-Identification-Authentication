@@ -14,7 +14,7 @@ def inicializar_weights_xavier(inp, out): #Xavier/Glorot initialization
 
 
 #configurações gerais
-usar_pouco = True #Só para testar com menos dados
+usar_pouco = False #Só para testar com menos dados
 timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
 descritores = ["HOG", "LBP"]  #descritores a processar
 modelos = ["linear","mlp"]    #tipos de modelo
@@ -178,7 +178,7 @@ for descritor in descritores:
 
             #MODELO MLP
             else:
-                h1, h2 = 128, 32
+                h1, h2 = 64, 16
                 W1, b1 = inicializar_weights_he(n_atrib, h1), np.zeros(h1)
                 W2, b2 = inicializar_weights_he(h1, h2), np.zeros(h2)
                 W3, b3 = inicializar_weights_xavier(h2, num_classes), np.zeros(num_classes)

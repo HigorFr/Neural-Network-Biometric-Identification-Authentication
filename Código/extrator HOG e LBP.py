@@ -8,7 +8,7 @@ from tqdm import tqdm
 import pandas as pd
 
 
-fazer_pouco = True
+fazer_pouco = Fase
 usar_descritor = "LBP"    #Se vai gerar HOG ou "LBP"
 caminho_root = "Código/Dataset/"
 
