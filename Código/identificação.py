@@ -14,10 +14,10 @@ def inicializar_weights_xavier(inp, out): #Xavier/Glorot initialization
 
 
 #configurações gerais
-usar_pouco = False #Só para testar com menos dados
+usar_pouco = False #Só para mudar se eu quero testar com menos dados
 timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
 descritores = ["HOG", "LBP"]  #descritores a processar
-modelos = ["linear","mlp"]    #tipos de modelo
+modelos = ["mlp","linear"]    #tipos de modelo
 random_state = 42               #seed para reproducibilidade
 
 for descritor in descritores:
@@ -185,7 +185,7 @@ for descritor in descritores:
 
                 #hiperparâmetros
                 lr = 0.001
-                l2 = 1e-3
+                l2 = 1e-4
                 epocas = 1000
                 batch = 64
                 dropout_rate = 0.1
