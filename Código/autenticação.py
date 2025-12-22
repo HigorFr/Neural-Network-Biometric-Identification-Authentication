@@ -87,6 +87,7 @@ for descritor in descritores:
         pasta_base = f"Resultados_Autenticacao/{descritor}/{modelo}"
         os.makedirs(pasta_base, exist_ok=True)
         arquivo_config = os.path.join(pasta_base, "run_config.txt")
+        arquivo_dat = os.path.join(pasta_base, "model.dat")
         arquivo_error = os.path.join(pasta_base, "run_error.txt")
 
         #já marca inicio da execção
@@ -390,3 +391,50 @@ for descritor in descritores:
             f.write(f"\nFINAL_AVERAGE_ACCURACY: {acuracia_media:.4f}\n")
             f.write(f"BEST_FOLD: {melhor_fold[0]} (ACCURACY: {melhor_fold[1]:.4f})\n")
             f.write(f"WORST_FOLD: {pior_fold[0]} (ACCURACY: {pior_fold[1]:.4f})\n")
+
+
+        with open(arquivo_dat, "w", encoding="utf-8") as f:
+            if modelo == "linear":
+            
+                f.write("MODEL: LINEAR\n")
+                f.write(f"INPUT_DIM: {n_atrib}\n")
+                f.write(f"NUM_CLASSES: {num_classes}\n")
+                f.write(f"LR: {lr}\n")
+                f.write(f"L2: {l2}\n\n")
+
+                f.write("WEIGHTS\n")
+                for row in W:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS\n")
+                f.write(" ".join(f"{v:.8f}" for v in b))
+
+            else:
+                f.write("MODEL: MLP\n")
+                f.write(f"INPUT_DIM: {n_atrib}\n")
+                f.write(f"HIDDEN_LAYER_1: {h1}\n")
+                f.write(f"HIDDEN_LAYER_2: {h2}\n")
+                f.write(f"NUM_CLASSES: {num_classes}\n")
+                f.write(f"LR: {lr}\n")
+                f.write(f"L2: {l2}\n")
+
+                f.write("WEIGHTS_LAYER_1\n")
+                for row in W1:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_LAYER_1\n")
+                f.write(" ".join(f"{v:.8f}" for v in b1) + "\n")
+
+                f.write("\nWEIGHTS_LAYER_2\n")
+                for row in W2:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_LAYER_2\n")
+                f.write(" ".join(f"{v:.8f}" for v in b2) + "\n")
+
+                f.write("\nWEIGHTS_OUTPUT_LAYER\n")
+                for row in W3:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_OUTPUT_LAYER\n")
+                f.write(" ".join(f"{v:.8f}" for v in b3))

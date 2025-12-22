@@ -56,6 +56,7 @@ for descritor in descritores:
         os.makedirs(pasta_base, exist_ok=True)
 
         arquivo_config = os.path.join(pasta_base, "run_config.txt")
+        arquivo_dat = os.path.join(pasta_base, "model.dat")
         arquivo_error = os.path.join(pasta_base, "run_error.txt")
 
         #inicia arquivos de log
@@ -360,4 +361,51 @@ for descritor in descritores:
                 f.write(f"MLP_OPERATION_DROPOUT_RATE: {dropout_rate}\n")
 
 
-os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+        with open(arquivo_dat, "w", encoding="utf-8") as f:
+            if modelo == "linear":
+            
+                f.write("MODEL: LINEAR\n")
+                f.write(f"INPUT_DIM: {n_atrib}\n")
+                f.write(f"NUM_CLASSES: {num_classes}\n")
+                f.write(f"LR: {lr}\n")
+                f.write(f"L2: {l2}\n\n")
+
+                f.write("WEIGHTS\n")
+                for row in W:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS\n")
+                f.write(" ".join(f"{v:.8f}" for v in b))
+
+            else:
+                f.write("MODEL: MLP\n")
+                f.write(f"INPUT_DIM: {n_atrib}\n")
+                f.write(f"HIDDEN_LAYER_1: {h1}\n")
+                f.write(f"HIDDEN_LAYER_2: {h2}\n")
+                f.write(f"NUM_CLASSES: {num_classes}\n")
+                f.write(f"LR: {lr}\n")
+                f.write(f"L2: {l2}\n")
+                f.write(f"DROPOUT_RATE: {dropout_rate}\n\n")
+
+                f.write("WEIGHTS_LAYER_1\n")
+                for row in W1:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_LAYER_1\n")
+                f.write(" ".join(f"{v:.8f}" for v in b1) + "\n")
+
+                f.write("\nWEIGHTS_LAYER_2\n")
+                for row in W2:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_LAYER_2\n")
+                f.write(" ".join(f"{v:.8f}" for v in b2) + "\n")
+
+                f.write("\nWEIGHTS_OUTPUT_LAYER\n")
+                for row in W3:
+                    f.write(" ".join(f"{v:.8f}" for v in row) + "\n")
+
+                f.write("\nBIAS_OUTPUT_LAYER\n")
+                f.write(" ".join(f"{v:.8f}" for v in b3))
+
+
