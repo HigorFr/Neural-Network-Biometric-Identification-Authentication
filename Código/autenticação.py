@@ -83,6 +83,7 @@ for descritor in descritores:
         print(f"------------------------------------------------")
 
         #ISso aqui é só para configurar onde ele vai guardar as saídas
+        
         pasta_base = f"Resultados_Autenticacao/{descritor}/{modelo}"
         os.makedirs(pasta_base, exist_ok=True)
         arquivo_config = os.path.join(pasta_base, "run_config.txt")
@@ -153,14 +154,14 @@ for descritor in descritores:
                         exp = np.exp(logits - logits.max(axis=1, keepdims=True))
                         probs = exp / (exp.sum(axis=1, keepdims=True) + 1e-8)
 
-                        loss = -np.mean(np.log(probs[np.arange(len(yb)), yb] + 1e-8))
-                        total_loss = loss + 0.5 * l2 * np.sum(W * W)
+                        loss = -np.mean(np.log(probs[np.arange(len(yb)), yb] + 1e-8)) #aquela função de perda l = media log de classe correta
+                        total_loss = loss + 0.5 * l2 * np.sum(W * W) #l2
 
                         losses.append(total_loss)
 
                         grad = probs
-                        grad[np.arange(len(yb)), yb] -= 1
-                        grad /= len(yb)
+                        grad[np.arange(len(yb)), yb] -= 1 #
+                        grad = grad / len(yb) #Só copeiei a formula da derivada da softmax + cross-entropy
 
                         W -= lr * (grad.T @ Xb + l2 * W)
                         b -= lr * grad.sum(axis=0)
@@ -242,17 +243,19 @@ for descritor in descritores:
 
                         #aqui começa o backprop
                         g3 = probs
-                        g3[np.arange(len(yb)), yb] -= 1
-                        g3 /= len(yb)
+                        g3[np.arange(len(yb)), yb] -= 1 #mesma coisa
+                        g3 = g3/ len(yb)
 
-                        g2 = (g3 @ W3) * (z2 > 0)
+                        g2 = (g3 @ W3) * (z2 > 0) 
                         g1 = (g2 @ W2) * (z1 > 0)
 
                         #atualiza os pesssos e bias com gradiente descente  e já joga o l2
                         W3 -= lr * (g3.T @ a2 + l2 * W3)
                         b3 -= lr * g3.sum(axis=0)
+                        
                         W2 -= lr * (g2.T @ a1 + l2 * W2)
                         b2 -= lr * g2.sum(axis=0)
+                        
                         W1 -= lr * (g1.T @ Xb + l2 * W1)
                         b1 -= lr * g1.sum(axis=0)
 
@@ -304,13 +307,13 @@ for descritor in descritores:
             FN = np.sum((pred == 0) & (y_teste == 1))
 
             #Dividdindo por classe
-            precision_1 = TP / (TP + FP + 1e-8)
-            recall_1    = TP / (TP + FN + 1e-8)
+            precisao1 = TP / (TP + FP + 1e-8)
+            recall1    = TP / (TP + FN + 1e-8)
 
-            precision_0 = TN / (TN + FN + 1e-8)
-            recall_0    = TN / (TN + FP + 1e-8)
+            precisao0 = TN / (TN + FN + 1e-8)
+            recall0    = TN / (TN + FP + 1e-8)
 
-            balanced_acc = 0.5 * (recall_0 + recall_1)
+            balanced_acc = 0.5 * (recall0 + recall1)
 
 
             acur = (pred == y_teste).mean()
@@ -321,11 +324,11 @@ for descritor in descritores:
             FPs.append(FP)
             FNs.append(FN)
 
-            precisions_1.append(precision_1)
-            recalls_1.append(recall_1)
+            precisions_1.append(precisao1)
+            recalls_1.append(recall1)
 
-            precisions_0.append(precision_0)
-            recalls_0.append(recall_0)
+            precisions_0.append(precisao0)
+            recalls_0.append(recall0)
 
 
             print(f"Acurácia: {acur:.4f}")

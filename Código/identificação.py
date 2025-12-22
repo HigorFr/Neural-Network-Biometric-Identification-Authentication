@@ -12,12 +12,11 @@ def inicializar_weights_xavier(inp, out): #Xavier/Glorot initialization
     return np.random.randn(out, inp) * np.sqrt(2.0 / (inp + out))
 
 
-
 #configurações gerais
 usar_pouco = False #Só para mudar se eu quero testar com menos dados
 timestamp = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-descritores = ["HOG", "LBP"]  #descritores a processar
-modelos = ["mlp","linear"]    #tipos de modelo
+descritores = ["HOG","LBP"]  #descritores a processar
+modelos = ["linear", "MLP"]    #tipos de modelo  
 random_state = 42               #seed para reproducibilidade
 
 for descritor in descritores:
@@ -110,11 +109,14 @@ for descritor in descritores:
                 #hiperparâmetros
                 lr = 0.005
                 l2 = 1e-4
-                epocas = 1000
-                batch = 64
+                epocas = 200
+                batch = 128
                 melhor_val_loss = np.inf
                 paciencia = 5
                 piora = 0
+
+
+
 
                 for ep in range(epocas):
                     #embaralha os dados
@@ -184,14 +186,14 @@ for descritor in descritores:
                 W3, b3 = inicializar_weights_xavier(h2, num_classes), np.zeros(num_classes)
 
                 #hiperparâmetros
-                lr = 0.001
+                lr = 0.005
                 l2 = 1e-4
-                epocas = 1000
-                batch = 64
-                dropout_rate = 0.1
+                epocas = 200
+                batch = 128
+                dropout_rate = 0.2
                 melhor_val_loss = np.inf
                 melhor_val_acc = 0
-                paciencia = 100
+                paciencia = 20
                 piora = 0
 
                 for ep in range(epocas):
@@ -356,3 +358,6 @@ for descritor in descritores:
                 f.write(f"MLP_OPERATION_BATCH_SIZE: {batch}\n")
                 f.write(f"MLP_OPERATION_L2: {l2}\n")
                 f.write(f"MLP_OPERATION_DROPOUT_RATE: {dropout_rate}\n")
+
+
+os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
