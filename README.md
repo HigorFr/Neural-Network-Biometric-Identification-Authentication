@@ -8,7 +8,7 @@ The project utilizes the CelebA dataset to train and evaluate models on two rela
 1. Authentication: verifying whether a given input image belongs to a claimed identity.
 2. Identification: determining the identity of the person in a given image from a set of known identities.
 
-All components — including data preprocessing, model architecture, forward and backward propagation, loss computation, and evaluation — were manually implemented to reinforce understanding of core machine learning concepts.
+All components, including data preprocessing, model architecture, forward and backward propagation, loss computation, and evaluation, were manually implemented to reinforce understanding of core machine learning concepts.
 
 ## Dataset
 
